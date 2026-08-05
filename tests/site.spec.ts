@@ -1,0 +1,98 @@
+import AxeBuilder from "@axe-core/playwright";
+import { expect, test } from "@playwright/test";
+
+test("home exposes its primary content and metadata", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  page.on("pageerror", (error) => errors.push(error.message));
+
+  await page.goto("/");
+
+  await expect(page).toHaveTitle("Glaux | Risk-First Intelligence Systems");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("GLAUX");
+  await expect(page.getByRole("link", { name: "Open Glaux Markets" }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Glaux Markets" })).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://useglaux.com/",
+  );
+
+  const socialImage = await page.request.get("/og-image.png");
+  const brandIcon = await page.request.get("/brand-icon-512.png");
+  expect(socialImage.ok()).toBeTruthy();
+  expect(brandIcon.ok()).toBeTruthy();
+  expect(errors).toEqual([]);
+});
+
+test("skip link moves focus to main content", async ({ page }) => {
+  await page.goto("/");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to main content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#main-content")).toBeFocused();
+});
+
+test("the linked product row has a matching hit area", async ({ page }) => {
+  await page.goto("/");
+  const heading = page.getByRole("heading", { name: "Glaux Markets" });
+  await heading.scrollIntoViewIfNeeded();
+  const box = await heading.boundingBox();
+  expect(box).not.toBeNull();
+
+  const targetHref = await page.evaluate(
+    ({ x, y }) => document.elementFromPoint(x, y)?.closest("a")?.getAttribute("href"),
+    { x: box!.x + box!.width / 2, y: box!.y + box!.height / 2 },
+  );
+  expect(targetHref).toBe("https://markets.useglaux.com");
+});
+
+test("reduced motion keeps the static poster and skips WebGL", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await page.waitForTimeout(1600);
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await expect(page.locator(".poster")).toBeVisible();
+});
+
+test("WebGL context loss restores the poster", async ({ page }) => {
+  await page.goto("/");
+  const canvas = page.locator("canvas");
+  await expect(canvas).toBeVisible({ timeout: 10_000 });
+  const posterLayer = page.locator(".hero__stage > .hero__layer").first();
+  await expect(posterLayer).toHaveClass(/hero__layer--hidden/, { timeout: 10_000 });
+
+  await canvas.dispatchEvent("webglcontextlost", { cancelable: true });
+  await expect(posterLayer).not.toHaveClass(/hero__layer--hidden/);
+});
+
+test("unsupported WebGL remains on the poster", async ({ page }) => {
+  await page.addInitScript(() => {
+    HTMLCanvasElement.prototype.getContext = (() =>
+      null) as typeof HTMLCanvasElement.prototype.getContext;
+  });
+  await page.goto("/");
+  await page.waitForTimeout(1600);
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await expect(page.locator(".poster")).toBeVisible();
+});
+
+for (const legalPage of [
+  { path: "/terms/", heading: "Terms of Use" },
+  { path: "/privacy/", heading: "Privacy Policy" },
+]) {
+  test(`${legalPage.heading} is directly addressable`, async ({ page }) => {
+    await page.goto(legalPage.path);
+    await expect(page.getByRole("heading", { level: 1, name: legalPage.heading })).toBeVisible();
+    await expect(page.getByText("Effective 1 August 2026")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Back to company" })).toHaveAttribute("href", "/");
+  });
+}
+
+test("home has no automatically detectable accessibility violations", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});

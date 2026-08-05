@@ -1,0 +1,1076 @@
+/* ================================================================
+   LAYOUT SHELL
+   ================================================================ */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin-inline: 0 auto;
+  padding-inline: var(--shell-pad);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-gap);
+  /* Anchor jumps must clear the sticky nav. */
+  scroll-margin-top: calc(var(--nav-bar-h) + 20px);
+}
+
+/* A hairline that fades at both ends: the only divider on the page. */
+.rule {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--hairline-strong) 22%,
+    var(--hairline-strong) 78%,
+    transparent
+  );
+}
+
+/* ================================================================
+   EDITORIAL PRIMITIVES
+   ================================================================ */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--gleam);
+  letter-spacing: var(--tracking-eyebrow);
+}
+.eyebrow .dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gleam);
+  box-shadow: 0 0 9px rgba(233, 180, 92, 0.7);
+}
+
+.section__head {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 68ch;
+}
+.section__title {
+  font-size: var(--fs-display-xl);
+  line-height: var(--lh-snug);
+  text-wrap: balance;
+}
+.section__lead {
+  max-width: 62ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+/* ================================================================
+   ACTIONS
+   There is exactly one filled button on the page: the hero's
+   "Open Glaux Markets". Every other action is a rule-and-arrow link,
+   so the single gold rectangle keeps its meaning instead of becoming
+   the page's default decoration.
+   ================================================================ */
+
+.btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  background: var(--grad-brand);
+  color: var(--text-inverse);
+  padding: 15px 30px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.002em;
+  white-space: nowrap;
+  box-shadow: 0 12px 34px -14px var(--accent-glow-strong);
+  transition:
+    background var(--dur-base) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-standard);
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -30% auto -30% -45%;
+  width: 32%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+  transform: skewX(-18deg) translateX(-220%);
+  transition: transform 780ms var(--ease-out);
+}
+.btn:hover {
+  background: var(--grad-brand-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px -14px var(--accent-glow-strong);
+}
+.btn:hover::before {
+  transform: skewX(-18deg) translateX(650%);
+}
+.btn:active {
+  transform: translateY(1px) scale(0.985);
+  box-shadow: 0 8px 22px -14px var(--accent-glow-strong);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+/* The secondary action everywhere: a word sitting on a hairline, which
+   brightens on hover. No fill, no border box, no blur. */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 10px;
+  padding-block-end: 8px;
+  border-bottom: 1px solid var(--hairline-strong);
+  color: var(--text-primary);
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    color var(--dur-base) var(--ease-standard),
+    border-color var(--dur-base) var(--ease-standard),
+    gap var(--dur-base) var(--ease-out);
+}
+.link-arrow:hover {
+  color: var(--accent-primary);
+  border-bottom-color: var(--accent-primary);
+  gap: 14px;
+}
+.link-arrow:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 4px;
+}
+/* For the one link that carries a product: gold from the start. */
+.link-arrow--lead {
+  font-size: 1rem;
+  color: var(--accent-primary);
+  border-bottom-color: var(--border-accent);
+}
+.link-arrow--lead:hover {
+  color: var(--accent-secondary);
+  border-bottom-color: var(--accent-secondary);
+}
+.link-arrow--sm {
+  gap: 8px;
+  padding-block-end: 5px;
+  font-size: var(--fs-label);
+}
+
+/* ================================================================
+   NAV: deliberately absent from the first viewport so the wordmark
+   is the only brand signal there. Fades in once the hero is past.
+   ================================================================ */
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: var(--nav-bar-h);
+  display: flex;
+  align-items: center;
+  background: rgba(7, 11, 18, 0.84);
+  border-bottom: 1px solid var(--hairline);
+  box-shadow: 0 14px 42px rgba(2, 4, 8, 0.18);
+  backdrop-filter: blur(16px) saturate(115%);
+  -webkit-backdrop-filter: blur(16px) saturate(115%);
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+}
+.nav.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  max-width: var(--stage-max);
+}
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: var(--tracking-caps);
+  color: var(--text-primary);
+}
+.nav__brand:hover {
+  color: var(--text-primary);
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 30px);
+}
+.nav__link {
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.nav__link:hover {
+  color: var(--text-primary);
+}
+@media (max-width: 640px) {
+  .nav__link {
+    display: none;
+  }
+}
+
+/* ================================================================
+   HERO: one composition. Full-bleed 3D atmosphere, the wordmark,
+   one headline, one sentence, one CTA pair. Nothing else.
+   ================================================================ */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* The 3D canvas / poster layer. Edge to edge, never interactive. */
+.hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero__layer {
+  position: absolute;
+  inset: 0;
+  transition: opacity 900ms var(--ease-out);
+}
+.hero__layer--hidden {
+  opacity: 0;
+}
+
+/* A top vignette and a wash at the very bottom, for depth and for the seam
+   into the next section. The owl's lower body dissolves in its own shader,
+   so no scrim is doing structural work here. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(7, 11, 18, 0.45) 0%, rgba(7, 11, 18, 0) 16%),
+    linear-gradient(
+      to top,
+      rgba(7, 11, 18, 0.92) 0%,
+      rgba(7, 11, 18, 0.5) 12%,
+      rgba(7, 11, 18, 0) 26%
+    );
+}
+
+/* The hero's own grid. Narrow viewports stack (owl above, copy below)
+   and the owl simply takes whatever height the copy leaves. */
+.hero__grid {
+  grid-row: 1;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(120px, 1fr) auto;
+  padding-block: calc(var(--nav-bar-h) + clamp(6px, 2vh, 18px)) clamp(18px, 3.5vh, 40px);
+  max-width: var(--stage-max);
+}
+
+/* An empty box that exists only to be measured. CSS decides where the owl
+   belongs at each breakpoint and the 3D scene fits itself into whatever
+   rectangle this lands on, so the composition has one owner rather than a
+   media query on one side and a camera calculation on the other. */
+.hero__slot {
+  grid-row: 1;
+  justify-self: center;
+  width: min(100%, 420px);
+  pointer-events: none;
+}
+/* Between a phone and the split, there is room to put the owl over to one
+   side. Copy low and left against owl high and right is the same diagonal
+   the split makes, so the two layouts read as one idea. */
+@media (min-width: 620px) {
+  .hero__slot {
+    justify-self: end;
+    width: min(76%, 470px);
+  }
+}
+
+.hero__content {
+  grid-row: 2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(16px, 2.4vh, 28px);
+}
+
+/* Contrast pad under the copy, for the stacked layout where the copy sits
+   in front of the owl. The split layout darkens its whole left flank
+   instead and switches this off. */
+.hero__content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: clamp(-40px, -5vh, -18px);
+  top: clamp(-170px, -14vh, -80px);
+  width: 100vw;
+  translate: -50% 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(7, 11, 18, 0) 0%,
+    rgba(7, 11, 18, 0.52) 42%,
+    rgba(7, 11, 18, 0.72) 100%
+  );
+}
+
+/* The wordmark and the headline are one <h1> so the page has a single,
+   fully descriptive top-level heading; they are only styled apart. */
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(12px, 1.8vh, 22px);
+  margin: 0;
+}
+
+.hero__wordmark {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-wordmark);
+  line-height: 0.86;
+  letter-spacing: 0.055em;
+  background: linear-gradient(
+    110deg,
+    #f4f8ff 0%,
+    #f4f8ff 28%,
+    var(--accent-secondary) 52%,
+    #f4f8ff 72%,
+    var(--accent-primary) 116%
+  );
+  background-size: 180% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 12px 40px rgba(7, 11, 18, 0.85));
+}
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__wordmark {
+    background: none;
+    color: var(--silver);
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+.hero__headline {
+  display: block;
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-weight: 400;
+  /* As with the wordmark, height-aware so the hero stays one screen. */
+  font-size: clamp(1.5rem, min(3vw, 4vh), 2.2rem);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.hero__sub {
+  max-width: 52ch;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 32px);
+  margin-top: clamp(4px, 1.2vh, 12px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__wordmark,
+  .hero__headline,
+  .hero__sub,
+  .hero__cta {
+    opacity: 0;
+    animation: hero-arrive 760ms var(--ease-out) forwards;
+  }
+  .hero__wordmark {
+    animation:
+      hero-arrive 820ms var(--ease-out) 80ms forwards,
+      wordmark-gleam 9s var(--ease-standard) 1.2s infinite alternate;
+  }
+  .hero__headline {
+    animation-delay: 180ms;
+  }
+  .hero__sub {
+    animation-delay: 290ms;
+  }
+  .hero__cta {
+    animation-delay: 400ms;
+  }
+}
+
+@keyframes hero-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes wordmark-gleam {
+  0%,
+  28% {
+    background-position: 90% 50%;
+  }
+  72%,
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@media (max-width: 360px) {
+  .hero__cta {
+    width: 100%;
+    align-items: flex-start;
+  }
+  .hero__cta .btn {
+    width: 100%;
+  }
+}
+
+/* Scroll affordance, on the spine rather than centred, so the eye leaves
+   the hero from the same edge every other section starts on. */
+.hero__foot {
+  grid-row: 2;
+  position: relative;
+  z-index: 2;
+  padding-block-end: clamp(16px, 3vh, 30px);
+  max-width: var(--stage-max);
+}
+.hero__scroll {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.hero__scroll:hover {
+  color: var(--accent-primary);
+}
+.hero__scroll-line {
+  width: 1px;
+  height: 42px;
+  background: linear-gradient(to bottom, transparent, var(--border-strong));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero__scroll-line {
+    animation: scroll-hint 2.8s var(--ease-standard) infinite;
+    transform-origin: top center;
+  }
+}
+@keyframes scroll-hint {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+@media (max-height: 680px) {
+  .hero__foot {
+    display: none;
+  }
+}
+
+/* ---- the split hero ----------------------------------------------------
+   Copy on the spine, owl in its own column to the right. The two stop
+   competing for one vertical axis, which is what lets the owl be large
+   and the wordmark be the first thing read at the same time. */
+@media (min-width: 980px) {
+  .hero__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.04fr);
+    grid-template-rows: minmax(0, 1fr);
+    column-gap: clamp(24px, 3.5vw, 64px);
+  }
+  .hero__slot {
+    grid-area: 1 / 2;
+    justify-self: stretch;
+    width: auto;
+    margin-block: clamp(8px, 2vh, 28px);
+  }
+  .hero__content {
+    grid-area: 1 / 1;
+    align-self: center;
+    max-width: 40rem;
+  }
+  /* The copy is beside the owl now, not on top of it, so the pad under it
+     gives way to a wash down the whole left flank. */
+  .hero__content::before {
+    display: none;
+  }
+  .hero__scrim {
+    background:
+      linear-gradient(
+        to right,
+        rgba(7, 11, 18, 0.88) 0%,
+        rgba(7, 11, 18, 0.58) 24%,
+        rgba(7, 11, 18, 0) 52%
+      ),
+      linear-gradient(to bottom, rgba(7, 11, 18, 0.5) 0%, rgba(7, 11, 18, 0) 18%),
+      linear-gradient(
+        to top,
+        rgba(7, 11, 18, 0.92) 0%,
+        rgba(7, 11, 18, 0.5) 12%,
+        rgba(7, 11, 18, 0) 26%
+      );
+  }
+  /* Answers to its column rather than the viewport: 15vw would run past
+     the gutter and into the owl. */
+  .hero__wordmark {
+    font-size: clamp(4.5rem, 8vw, 7.5rem);
+  }
+  .hero__headline {
+    max-width: 19ch;
+    font-size: clamp(1.7rem, 2.3vw, 2.6rem);
+  }
+}
+
+/* ================================================================
+   HERO POSTER: the static fallback. Pure CSS/SVG, so it costs no
+   bytes beyond the markup and is the LCP element on every load.
+   ================================================================ */
+
+/* The mark's position tracks the owl slot rather than the viewport centre,
+   so the fallback and the canvas compose the page the same way. */
+.poster {
+  --poster-x: 50%;
+  --poster-y: 27%;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+@media (min-width: 980px) {
+  .poster {
+    --poster-x: 74%;
+    --poster-y: 49%;
+  }
+}
+.poster__glow {
+  position: absolute;
+  top: var(--poster-y);
+  left: var(--poster-x);
+  width: min(86vw, 660px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--accent-glow-strong) 0%,
+    rgba(233, 180, 92, 0.1) 34%,
+    transparent 68%
+  );
+  filter: blur(14px);
+}
+.poster__mark {
+  position: absolute;
+  top: var(--poster-y);
+  left: var(--poster-x);
+  width: min(34vw, 215px);
+  translate: -50% -50%;
+  color: var(--silver);
+  opacity: 0.92;
+}
+.poster__rings {
+  position: absolute;
+  top: var(--poster-y);
+  left: var(--poster-x);
+  width: min(74vw, 470px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  color: var(--gleam);
+  opacity: 0.38;
+}
+@media (min-width: 980px) {
+  .poster__mark {
+    width: min(24vw, 330px);
+  }
+  .poster__rings {
+    width: min(34vw, 470px);
+  }
+  .poster__glow {
+    width: min(46vw, 660px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .poster__rings {
+    animation: poster-drift 34s linear infinite;
+  }
+  .poster__glow {
+    animation: poster-breathe 9s var(--ease-standard) infinite;
+  }
+}
+@keyframes poster-drift {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes poster-breathe {
+  0%,
+  100% {
+    opacity: 0.72;
+    scale: 1;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.05;
+  }
+}
+
+/* ================================================================
+   WHAT GLAUX DOES
+   ================================================================ */
+
+.what {
+  display: grid;
+  gap: clamp(28px, 5vw, 72px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 900px) {
+  .what {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: start;
+  }
+}
+.what__body {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+/* ================================================================
+   PRODUCTS
+   A catalogue, not a card wall: numbered entries on hairlines, with a
+   mono rail on the left that puts each product's index and status on
+   the same spine every section starts from.
+   ================================================================ */
+
+.products {
+  margin-top: clamp(32px, 5vh, 60px);
+  border-top: 1px solid var(--hairline);
+}
+
+.product {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px clamp(24px, 4vw, 72px);
+  padding-block: clamp(28px, 4.5vh, 48px);
+  border-bottom: 1px solid var(--hairline);
+  isolation: isolate;
+  transition: border-color var(--dur-base) var(--ease-standard);
+}
+.product::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(233, 180, 92, 0.075),
+    rgba(126, 147, 176, 0.025) 48%,
+    transparent 82%
+  );
+  opacity: 0;
+  transform: scaleX(0.76);
+  transform-origin: left center;
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    transform 520ms var(--ease-out);
+}
+.product::after {
+  content: "";
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  left: 0;
+  width: 1px;
+  background: var(--accent-primary);
+  box-shadow: 0 0 12px var(--accent-glow-strong);
+  opacity: 0;
+  transform: scaleY(0.3);
+  transition:
+    opacity var(--dur-base) var(--ease-standard),
+    transform 520ms var(--ease-out);
+}
+@media (min-width: 1040px) {
+  .product {
+    grid-template-columns: 6.5rem minmax(0, 0.82fr) minmax(0, 1.18fr);
+    align-items: start;
+  }
+}
+
+.product__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+@media (min-width: 1040px) {
+  .product__meta {
+    flex-direction: column;
+    gap: 9px;
+  }
+}
+.product__index {
+  color: var(--gleam);
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.product__status {
+  color: var(--text-tertiary);
+}
+.product__status--live {
+  color: var(--verdigris);
+}
+
+.product__head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 420ms var(--ease-out);
+}
+.product__name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-display-lg);
+  line-height: var(--lh-snug);
+  letter-spacing: 0.004em;
+  color: var(--text-primary);
+  text-wrap: balance;
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.product__tagline {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tracking-mono);
+  color: var(--gleam);
+}
+
+.product__body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: transform 460ms var(--ease-out);
+}
+.product__text {
+  max-width: 58ch;
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+  text-wrap: pretty;
+}
+/* The old chips said the same thing inside pill outlines. As a spaced
+   mono line they read as a specification, which is what they are. */
+.product__facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px clamp(16px, 2vw, 28px);
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* Everything the row says is dimmer for products that are not shipping. */
+.product--pending .product__name {
+  color: var(--text-secondary);
+}
+.product--pending .product__tagline {
+  color: var(--text-tertiary);
+}
+
+.product--linked:hover .product__name {
+  color: var(--accent-secondary);
+}
+.product--linked:hover .product__index {
+  color: var(--accent-secondary);
+}
+@media (hover: hover) and (pointer: fine) {
+  .product--linked:hover {
+    border-bottom-color: var(--border-accent);
+  }
+  .product--linked:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .product--linked:hover::after {
+    opacity: 0.9;
+    transform: scaleY(1);
+  }
+  .product--linked:hover .product__head {
+    transform: translateX(5px);
+  }
+  .product--linked:hover .product__body {
+    transform: translateX(8px);
+  }
+}
+.product--linked .link-arrow--lead::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.product--linked:has(.link-arrow--lead:focus-visible) {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 6px;
+}
+.product--linked .link-arrow--lead:focus-visible {
+  outline: none;
+}
+
+/* The open slot is a placeholder, so it must not compete typographically
+   with the products that actually exist. */
+.product--future .product__name {
+  font-size: var(--fs-title);
+  color: var(--text-secondary);
+}
+.product--future .product__text {
+  font-size: var(--fs-body-sm);
+}
+.product--future .product__index {
+  color: var(--text-tertiary);
+}
+
+/* ================================================================
+   PRINCIPLES
+   ================================================================ */
+
+.principles {
+  display: grid;
+  gap: clamp(24px, 3.4vw, 40px);
+  margin-top: clamp(36px, 6vh, 64px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 620px) {
+  .principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1040px) {
+  .principles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.principle {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+  transition:
+    transform 420ms var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard);
+}
+.principle__index {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-caps);
+  color: var(--gleam);
+  transition:
+    color var(--dur-base) var(--ease-standard),
+    text-shadow var(--dur-base) var(--ease-standard);
+}
+.principle__title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-title);
+  color: var(--text-primary);
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.principle__body {
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+@media (hover: hover) and (pointer: fine) {
+  .principle:hover {
+    transform: translateY(-5px);
+    border-top-color: var(--border-accent);
+  }
+  .principle:hover .principle__index {
+    color: var(--accent-secondary);
+    text-shadow: 0 0 14px var(--accent-glow-strong);
+  }
+  .principle:hover .principle__title {
+    color: var(--accent-secondary);
+  }
+}
+
+.principles__coda {
+  max-width: 68ch;
+  margin-top: clamp(40px, 6vh, 72px);
+  padding-left: clamp(16px, 2vw, 24px);
+  border-left: 2px solid var(--border-accent);
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+  text-wrap: pretty;
+}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+
+.footer {
+  position: relative;
+  margin-top: var(--section-gap);
+  border-top: 1px solid var(--hairline);
+  background:
+    radial-gradient(700px 260px at 8% 100%, rgba(233, 180, 92, 0.055), transparent 70%),
+    linear-gradient(to bottom, rgba(7, 11, 18, 0), rgba(7, 11, 18, 0.9));
+}
+.footer__grid {
+  display: grid;
+  gap: clamp(32px, 5vw, 56px);
+  padding-block: clamp(48px, 8vh, 76px);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .footer__grid {
+    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  }
+}
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 34ch;
+}
+.footer__lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: var(--tracking-caps);
+  color: var(--text-primary);
+}
+.footer__tag {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+  line-height: var(--lh-normal);
+}
+.footer__col h2 {
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.footer__col ul {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+.footer__col a {
+  font-size: var(--fs-body-sm);
+  color: var(--text-secondary);
+}
+.footer__col a:hover {
+  color: var(--accent-primary);
+}
+.footer__col span {
+  font-size: var(--fs-body-sm);
+  color: var(--text-tertiary);
+}
+
+.footer__legal {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-block: 26px 40px;
+  border-top: 1px solid var(--border-subtle);
+}
+.footer__disclaimer {
+  max-width: 78ch;
+  font-size: var(--fs-label);
+  line-height: var(--lh-normal);
+  color: var(--text-tertiary);
+  text-wrap: pretty;
+}
+.footer__copyright {
+  font-family: var(--font-mono);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-caps);
+  color: var(--faint);
+}
+
+/* ================================================================
+   UTILITY
+   ================================================================ */
+
+.icon-arrow {
+  flex: none;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+a:hover .icon-arrow,
+.product--linked:hover .icon-arrow {
+  transform: translate(2px, -2px);
+}

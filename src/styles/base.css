@@ -1,0 +1,213 @@
+/* ================================================================
+   BASE: reset, atmosphere, typography, accessibility primitives.
+   ================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  /* The nyx sky: a lifted core, a warm gleam bleeding in from the upper
+     right, over near-black. Fixed so sections drift across it. */
+  background:
+    radial-gradient(1100px 720px at 50% 22%, #0d1626 0%, transparent 68%),
+    radial-gradient(900px 560px at 88% -14%, var(--accent-glow), transparent 60%), var(--nyx);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+@media (pointer: coarse) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  min-width: 0;
+  isolation: isolate;
+}
+
+/* A physical surface over the digital sky. The texture is generated in the
+   browser, costs no request, and is faint enough to disappear behind copy. */
+#root::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.026;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+/* Keeps the wide canvas feeling like an illuminated instrument surface,
+   rather than an endless flat fill. */
+#root::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 150px rgba(2, 4, 8, 0.4),
+    inset 0 -90px 130px rgba(2, 4, 8, 0.2);
+}
+
+@media (max-width: 640px) {
+  #root::after {
+    box-shadow: inset 0 0 80px rgba(2, 4, 8, 0.28);
+  }
+}
+
+main:focus {
+  outline: none;
+}
+
+img,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+/* Display headings use Marcellus, a single-weight serif. Keep weight 400
+   so the browser never synthesizes a muddy faux-bold. */
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.004em;
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+h3,
+h4 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--accent-secondary);
+  text-decoration: none;
+  transition: color var(--dur-base) var(--ease-standard);
+}
+a:hover {
+  color: var(--accent-primary);
+}
+
+:where(a, button, [tabindex]):focus-visible {
+  border-radius: 4px;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--gleam);
+  color: var(--nyx);
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Visually hidden until focused. */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  z-index: 200;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--gleam);
+  color: var(--text-inverse);
+  font-weight: 700;
+  font-size: var(--fs-label);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-50%) translateY(-180%);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateX(-50%) translateY(0);
+  color: var(--text-inverse);
+  outline: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Nothing on this site depends on animation to convey meaning, so the
+   reduced-motion path simply removes it. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,134 @@
+/* ================================================================
+   GLAUX "NYX" DESIGN TOKENS
+   Ported from the Glaux Markets product so the company hub and the
+   products read as one system. Dark-only observatory palette:
+   gleam (gold) = attention, verdigris (green) = upside,
+   ember (red) = downside. Trading-specific tokens are omitted here.
+   ================================================================ */
+
+:root {
+  /* ---- brand primitives ---- */
+  --nyx: #070b12;
+  --silver: #dce6f4;
+  --mist: #8da0bc;
+  --faint: #7a8faf;
+  --gleam: #e9b45c;
+  --verdigris: #45b98e;
+  --ember: #d85f55;
+  --line: rgba(141, 160, 188, 0.16);
+
+  /* ---- base surfaces (lifted nyx) ---- */
+  --bg-base: #070b12;
+  --bg-surface: #0e1524;
+  --bg-elevated: #141d2e;
+  --bg-subtle: #1b2638;
+
+  --border-default: var(--line);
+  --border-subtle: rgba(141, 160, 188, 0.09);
+  --border-strong: rgba(141, 160, 188, 0.3);
+  --border-accent: rgba(233, 180, 92, 0.34);
+
+  --text-primary: #dce6f4;
+  --text-secondary: #8da0bc;
+  --text-tertiary: #7a8faf;
+  --text-inverse: #15110a;
+
+  /* ---- accent (the owl's gleam). Text on top must be dark ink. ---- */
+  --accent-primary: #e9b45c;
+  --accent-secondary: #f2c674;
+  --accent-glow: rgba(233, 180, 92, 0.18);
+  --accent-glow-strong: rgba(233, 180, 92, 0.42);
+
+  /* One brand gradient so every primary surface matches. */
+  --grad-brand: linear-gradient(135deg, #e9b45c 0%, #f2c674 100%);
+  --grad-brand-hover: linear-gradient(135deg, #f2c674 0%, #f7d391 100%);
+
+  /* Markets' glass and status tints are deliberately not carried over. They
+     are product chrome: on a marketing page a blurred panel or a filled
+     status pill makes the company look like a screenshot of its own app. */
+
+  /* ---- shadows (deep on near-black) ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 18px 52px rgba(0, 0, 0, 0.62);
+
+  /* ---- radius ---- */
+  --radius-sm: 9px;
+  --radius: 14px;
+  --radius-lg: 20px;
+
+  /* ---- layout ---- */
+  /* Fill a standard wide display instead of centring a 1440px island inside
+     it. The cap only protects ultrawide screens; the shell itself is anchored
+     left, so spare width beyond the cap stays on the right. */
+  --shell-max: 1920px;
+  --stage-max: 2560px;
+  --shell-pad: clamp(20px, 4.5vw, 64px);
+  --section-gap: clamp(88px, 13vh, 168px);
+  --nav-bar-h: 60px;
+
+  /* ---- fonts ---- */
+  --font-display: "Marcellus", Georgia, "Times New Roman", serif;
+  --font-body:
+    "Schibsted Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* ================================================================
+     TYPE SCALE: one tokenized ramp. Marcellus for display, Grotesk
+     for UI/body, Spline Mono for labels and data.
+     ================================================================ */
+  /* Sized for the stacked hero, where the wordmark has the full width and
+     the owl sits above it, hence height-aware, or a short laptop screen
+     leaves the owl nothing. The split hero overrides this: there the
+     wordmark answers to its column, not the viewport. */
+  --fs-wordmark: clamp(3.6rem, min(16vw, 17vh), 8rem);
+  --fs-display-2xl: clamp(2.6rem, 6vw, 4.6rem);
+  --fs-display-xl: clamp(2rem, 4.2vw, 3.1rem);
+  --fs-display-lg: clamp(1.7rem, 3vw, 2.35rem);
+  --fs-title: clamp(1.15rem, 1.5vw, 1.4rem);
+  --fs-subtitle: 1.125rem;
+  --fs-lead: clamp(1.0625rem, 1.5vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-body-sm: 0.875rem;
+  --fs-label: 0.8125rem;
+  --fs-micro: 0.6875rem;
+  --lh-tight: 1.08;
+  --lh-snug: 1.3;
+  --lh-normal: 1.55;
+  --tracking-eyebrow: 0.32em;
+  --tracking-caps: 0.16em;
+  --tracking-mono: -0.01em;
+
+  /* ================================================================
+     MOTION LANGUAGE: 3 durations, 3 easings, used everywhere so
+     motion reads as one system rather than per-component guesses.
+     ================================================================ */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expressive: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- elevation ---- */
+  --surface-1: var(--bg-surface);
+  --surface-2: var(--bg-elevated);
+  --surface-3: var(--bg-subtle);
+  --hairline: var(--line);
+  --hairline-strong: rgba(141, 160, 188, 0.28);
+
+  color-scheme: dark;
+}
+
+/* Users who ask the OS for more contrast get firmer hairlines and a
+   brighter secondary text ramp. */
+@media (prefers-contrast: more) {
+  :root {
+    --border-default: rgba(220, 230, 244, 0.42);
+    --border-subtle: rgba(220, 230, 244, 0.28);
+    --border-strong: rgba(220, 230, 244, 0.55);
+    --text-secondary: #b7c5d9;
+    --text-tertiary: #a7b7cd;
+    --faint: #a7b7cd;
+  }
+}
