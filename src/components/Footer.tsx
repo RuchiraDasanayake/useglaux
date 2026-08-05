@@ -6,6 +6,20 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="shell">
+        <div className="footer__statement">
+          <span className="eyebrow">
+            <span className="dot" />
+            Start a conversation
+          </span>
+          <div className="footer__statement-main">
+            <p>Make uncertainty visible.</p>
+            <a className="footer__contact" href={`mailto:${CONTACT_EMAIL}`}>
+              {CONTACT_EMAIL}
+              <ArrowUpRight size={18} />
+            </a>
+          </div>
+        </div>
+
         <div className="footer__grid">
           <div className="footer__brand">
             <span className="footer__lockup">
@@ -67,6 +81,14 @@ export default function Footer() {
             © {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
           </p>
         </div>
+
+        <a className="footer__back" href="#top" aria-label="Back to top">
+          Back to top
+          <span aria-hidden="true">↑</span>
+        </a>
+      </div>
+      <div className="footer__wordmark" aria-hidden="true">
+        {WORDMARK}
       </div>
     </footer>
   );

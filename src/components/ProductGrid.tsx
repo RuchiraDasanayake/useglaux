@@ -7,16 +7,18 @@ export default function ProductGrid() {
     <section className="section" id="products">
       <div className="shell">
         <Reveal>
-          <div className="section__head">
+          <div className="section__head section__head--split">
             <span className="eyebrow">
               <span className="dot" />
               Products
             </span>
-            <h2 className="section__title">One instrument per domain.</h2>
-            <p className="section__lead">
-              Each Glaux product is a separate application with its own data, its own models and its
-              own published record. They share a method, not a dashboard.
-            </p>
+            <div className="section__intro">
+              <h2 className="section__title">One instrument per domain.</h2>
+              <p className="section__lead">
+                Each Glaux product is a separate application with its own data, its own models and
+                its own published record. They share a method, not a dashboard.
+              </p>
+            </div>
           </div>
         </Reveal>
 

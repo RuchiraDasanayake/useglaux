@@ -6,12 +6,17 @@ export default function Principles() {
     <section className="section" id="principles">
       <div className="shell">
         <Reveal>
-          <div className="section__head">
+          <div className="section__head section__head--split">
             <span className="eyebrow">
               <span className="dot" />
               Principles
             </span>
-            <h2 className="section__title">How we decide what to ship.</h2>
+            <div className="section__intro">
+              <h2 className="section__title">How we decide what to ship.</h2>
+              <p className="section__lead">
+                Four constraints that keep every instrument useful, inspectable and honest.
+              </p>
+            </div>
           </div>
         </Reveal>
 
