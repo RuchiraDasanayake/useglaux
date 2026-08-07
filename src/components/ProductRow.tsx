@@ -4,7 +4,12 @@ import Reveal from "./Reveal";
 
 /**
  * One entry in the product catalogue: a mono rail carrying its number and
- * status, the name, and the description with its specification beneath.
+ * status, the name, the description, and the specification.
+ *
+ * The four parts are siblings rather than nested blocks because the row
+ * re-columns as the screen widens: stacked on a phone, three columns on a
+ * laptop, and on a wide display the spec moves out to the right edge so
+ * the row uses the full measure its hairline draws.
  *
  * Deliberately not a card. Filled panels are how the Markets dashboard
  * presents data; borrowing them here made the company page look like a
@@ -44,22 +49,22 @@ export default function ProductRow({
         <p className="product__tagline">{product.tagline}</p>
       </div>
 
-      <div className="product__body">
-        <p className="product__text">{product.body}</p>
+      <p className="product__text">{product.body}</p>
 
-        <ul className="product__facets">
-          {product.chips.map((chip) => (
-            <li key={chip}>{chip}</li>
-          ))}
-        </ul>
+      <ul className="product__facets">
+        {product.chips.map((chip) => (
+          <li key={chip}>{chip}</li>
+        ))}
+      </ul>
 
-        {product.href && product.cta && (
+      {product.href && product.cta && (
+        <div className="product__action">
           <a className="link-arrow link-arrow--lead" href={product.href}>
             {product.cta}
             <ArrowUpRight size={15} />
           </a>
-        )}
-      </div>
+        </div>
+      )}
     </Reveal>
   );
 }

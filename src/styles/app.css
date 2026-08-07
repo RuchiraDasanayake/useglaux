@@ -115,7 +115,7 @@
 /* ================================================================
    ACTIONS
    There is exactly one filled button on the page: the hero's
-   "Open Glaux Markets". Every other action is a rule-and-arrow link,
+   "Open Glaux Ledger". Every other action is a rule-and-arrow link,
    so the single gold rectangle keeps its meaning instead of becoming
    the page's default decoration.
    ================================================================ */
@@ -250,7 +250,7 @@
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  max-width: var(--stage-max);
+  max-width: var(--shell-max);
 }
 .nav__brand {
   display: inline-flex;
@@ -377,7 +377,7 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(120px, 1fr) auto;
   padding-block: calc(var(--nav-bar-h) + clamp(6px, 2vh, 18px)) clamp(18px, 3.5vh, 40px);
-  max-width: var(--stage-max);
+  max-width: var(--shell-max);
 }
 
 /* An empty box that exists only to be measured. CSS decides where the owl
@@ -560,7 +560,7 @@
   position: relative;
   z-index: 2;
   padding-block-end: clamp(16px, 3vh, 30px);
-  max-width: var(--stage-max);
+  max-width: var(--shell-max);
 }
 .hero__scroll {
   display: inline-flex;
@@ -803,7 +803,7 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px clamp(24px, 4vw, 72px);
+  gap: 16px clamp(24px, 4vw, 72px);
   padding: clamp(28px, 4.5vh, 48px) clamp(0px, 1.8vw, 26px);
   border-bottom: 1px solid var(--hairline);
   isolation: isolate;
@@ -846,6 +846,22 @@
   .product {
     grid-template-columns: 7.5rem minmax(0, 0.78fr) minmax(0, 1.22fr);
     align-items: start;
+    row-gap: 20px;
+  }
+  .product__meta,
+  .product__head {
+    grid-row: 1 / span 3;
+  }
+  .product__meta {
+    grid-column: 1;
+  }
+  .product__head {
+    grid-column: 2;
+  }
+  .product__text,
+  .product__facets,
+  .product__action {
+    grid-column: 3;
   }
 }
 
@@ -919,17 +935,16 @@
   color: var(--gleam);
 }
 
-.product__body {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  transition: transform 460ms var(--ease-out);
-}
 .product__text {
   max-width: 58ch;
   color: var(--text-secondary);
   line-height: var(--lh-normal);
   text-wrap: pretty;
+}
+.product__text,
+.product__facets,
+.product__action {
+  transition: transform 460ms var(--ease-out);
 }
 /* The old chips said the same thing inside pill outlines. As a spaced
    mono line they read as a specification, which is what they are. */
@@ -973,7 +988,9 @@
   .product--linked:hover .product__head {
     transform: translateX(5px);
   }
-  .product--linked:hover .product__body {
+  .product--linked:hover .product__text,
+  .product--linked:hover .product__facets,
+  .product--linked:hover .product__action {
     transform: translateX(8px);
   }
 }
@@ -1227,6 +1244,11 @@
   color: var(--faint);
   white-space: nowrap;
 }
+/* Anchored to the shell rather than the viewport, or on a wide display it
+   drifts off into the gutter with nothing beside it. */
+.footer .shell {
+  position: relative;
+}
 .footer__back {
   position: absolute;
   right: var(--shell-pad);
@@ -1315,6 +1337,86 @@
   }
   .footer__back {
     display: none;
+  }
+}
+
+/* ================================================================
+   WIDE DISPLAYS
+   Every fractional column on the page keeps taking its share of a 27"
+   or ultrawide screen, so rails sprawl and paragraphs run past the
+   point anyone can track a line back to its start. Above 1700px the
+   columns are capped in rem, which means they hold their proportions
+   against the type ramp rather than against the viewport, and the
+   width the copy does not need is left as air on the right where the
+   hairlines still carry the full measure.
+   ================================================================ */
+
+@media (min-width: 1700px) {
+  /* The section head takes the catalogue's own grid, so the eyebrow sits
+     on the spine, the title starts where product names start, and the
+     lead starts where their descriptions do. One page, one set of
+     verticals, rather than each block finding its own. */
+  .section__head--split {
+    grid-template-columns: 8rem minmax(0, var(--rail-max)) minmax(0, 1fr) minmax(0, 15rem);
+    column-gap: clamp(24px, 4vw, 72px);
+    row-gap: 22px;
+  }
+  .section__head--split .eyebrow {
+    grid-column: 1 / span 2;
+  }
+  .section__head--split .section__intro {
+    display: contents;
+  }
+  .section__head--split .section__title {
+    grid-column: 2 / span 2;
+  }
+  .section__head--split .section__lead {
+    grid-column: 3;
+  }
+  .footer__statement {
+    grid-template-columns: 8rem minmax(0, var(--rail-max)) minmax(0, 1fr) minmax(0, 15rem);
+    column-gap: clamp(24px, 4vw, 72px);
+  }
+  .footer__statement .eyebrow {
+    grid-column: 1 / span 2;
+  }
+  .footer__statement-main {
+    grid-column: 2 / span 3;
+  }
+  .what__body {
+    max-width: 66ch;
+  }
+  /* The spec leaves the description and takes the right edge, so the row
+     is anchored at both ends of the hairline instead of trailing off into
+     half a screen of empty width. */
+  .product {
+    grid-template-columns: 8rem minmax(0, var(--rail-max)) minmax(0, 1fr) minmax(0, 15rem);
+  }
+  .product__text {
+    max-width: 62ch;
+  }
+  .product__facets {
+    grid-column: 4;
+    grid-row: 1 / span 3;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 11px;
+    text-align: right;
+  }
+  .product__action {
+    grid-row: 2;
+  }
+  .footer__grid {
+    grid-template-columns: minmax(18rem, var(--rail-max)) repeat(3, minmax(8rem, 0.55fr));
+  }
+  .hero__content {
+    max-width: 46rem;
+  }
+  .hero__wordmark {
+    font-size: clamp(6rem, 6.4vw, 9.5rem);
+  }
+  .hero__headline {
+    font-size: clamp(2.2rem, 2.1vw, 3.1rem);
   }
 }
 

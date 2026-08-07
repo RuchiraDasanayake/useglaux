@@ -1,4 +1,4 @@
-import { COMPANY_NAME, CONTACT_EMAIL, DISCLAIMER, MARKETS_URL, WORDMARK } from "../lib/brand";
+import { COMPANY_NAME, CONTACT_EMAIL, DISCLAIMER, LEDGER_URL, WORDMARK } from "../lib/brand";
 import ArrowUpRight from "./ArrowUpRight";
 import OwlMark from "./OwlMark";
 
@@ -36,10 +36,13 @@ export default function Footer() {
             <h2>Products</h2>
             <ul>
               <li>
-                <a href={MARKETS_URL}>
-                  Glaux Markets
+                <a href={LEDGER_URL}>
+                  Glaux Ledger
                   <ArrowUpRight size={12} />
                 </a>
+              </li>
+              <li>
+                <span>Glaux Markets (in development)</span>
               </li>
               <li>
                 <span>Glaux Agro (in development)</span>

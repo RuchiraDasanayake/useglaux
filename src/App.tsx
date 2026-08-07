@@ -5,8 +5,11 @@ import Principles from "./components/Principles";
 import ProductGrid from "./components/ProductGrid";
 import WhatWeDo from "./components/WhatWeDo";
 import MotionProvider from "./lib/motion";
+import { useSmoothAnchors } from "./lib/scrollTo";
 
 export default function App() {
+  useSmoothAnchors();
+
   return (
     <MotionProvider>
       <a className="skip-link" href="#main-content">

@@ -7,13 +7,13 @@
 export const COMPANY_NAME = "Glaux";
 export const WORDMARK = "GLAUX";
 
-export const MARKETS_URL = import.meta.env.VITE_MARKETS_URL ?? "https://markets.useglaux.com";
-export const CONTACT_EMAIL = "support@useglaux.com";
+export const LEDGER_URL = import.meta.env.VITE_LEDGER_URL ?? "https://ledger.useglaux.com";
+export const CONTACT_EMAIL = "useglaux@gmail.com";
 
 export const HERO = {
   headline: "We build instruments for reading risk.",
   sub: "Glaux designs calibrated, regime-aware intelligence systems. Transparent about what they know, and honest about what they don't.",
-  primaryCta: "Open Glaux Markets",
+  primaryCta: "Open Glaux Ledger",
   secondaryCta: "Explore",
 } as const;
 
@@ -43,15 +43,24 @@ export interface Product {
 
 export const PRODUCTS: readonly Product[] = [
   {
-    id: "markets",
-    name: "Glaux Markets",
+    id: "ledger",
+    name: "Glaux Ledger",
     status: "live",
     statusLabel: "Live",
+    tagline: "Mobile-first bookkeeping for small shops",
+    body: "Bookkeeping built for a phone on the counter, not an accounts department. Record a sale or an expense by speaking it, photographing the receipt, or typing one line, in the seconds between customers. The paper ledger becomes a running account of what the shop takes in and what it spends.",
+    chips: ["Voice entry", "Receipt capture", "Seconds per entry", "Built for phones"],
+    href: LEDGER_URL,
+    cta: "Open Glaux Ledger",
+  },
+  {
+    id: "markets",
+    name: "Glaux Markets",
+    status: "development",
+    statusLabel: "In development",
     tagline: "Risk-first market intelligence",
-    body: "Calibrated volatility and regime estimates across crypto and the Colombo Stock Exchange, distilled to one read. Every forecast carries its confidence, and the track record is public.",
+    body: "Calibrated volatility and regime estimates across crypto and the Colombo Stock Exchange, distilled to one read. Every forecast will carry its confidence, and the track record will be public from the day it ships.",
     chips: ["Volatility", "Regime", "Calibration", "Public track record"],
-    href: MARKETS_URL,
-    cta: "Open Glaux Markets",
   },
   {
     id: "agro",

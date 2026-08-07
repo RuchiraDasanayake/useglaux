@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import { HERO, MARKETS_URL, WORDMARK } from "../lib/brand";
+import { HERO, LEDGER_URL, WORDMARK } from "../lib/brand";
 import { detectTier, detectWebGL } from "../lib/capability";
 import type { DeviceTier } from "../lib/capability";
 import {
@@ -87,7 +87,7 @@ export default function Hero() {
           <p className="hero__sub">{HERO.sub}</p>
 
           <div className="hero__cta">
-            <a className="btn" href={MARKETS_URL}>
+            <a className="btn" href={LEDGER_URL}>
               {HERO.primaryCta}
               <ArrowUpRight size={15} />
             </a>

@@ -15,8 +15,9 @@ export default function ProductGrid() {
             <div className="section__intro">
               <h2 className="section__title">One instrument per domain.</h2>
               <p className="section__lead">
-                Each Glaux product is a separate application with its own data, its own models and
-                its own published record. They share a method, not a dashboard.
+                Each Glaux product is a separate application with its own data and its own users.
+                One keeps the record a small business runs on; the others measure the risk that
+                record cannot see by itself. They share a method, not a dashboard.
               </p>
             </div>
           </div>
@@ -27,7 +28,7 @@ export default function ProductGrid() {
             <ProductRow key={product.id} product={product} index={index} delay={index * 0.08} />
           ))}
 
-          <Reveal as="li" className="product product--future" delay={0.16}>
+          <Reveal as="li" className="product product--future" delay={PRODUCTS.length * 0.08}>
             <div className="product__meta">
               <span className="product__index">{String(PRODUCTS.length + 1).padStart(2, "0")}</span>
               <span className="product__status">Open</span>
@@ -35,11 +36,9 @@ export default function ProductGrid() {
             <div className="product__head">
               <h3 className="product__name">More to come</h3>
             </div>
-            <div className="product__body">
-              <p className="product__text">
-                A domain is added once its risk model earns the place. Nothing ships to look busy.
-              </p>
-            </div>
+            <p className="product__text">
+              A domain is added once its risk model earns the place. Nothing ships to look busy.
+            </p>
           </Reveal>
         </ol>
       </div>

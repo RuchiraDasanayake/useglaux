@@ -11,7 +11,8 @@ is meant to read as a research group rather than a landing page.
 
 Products it points at:
 
-- **Glaux Markets**: [markets.useglaux.com](https://markets.useglaux.com) (live)
+- **Glaux Ledger**: [ledger.useglaux.com](https://ledger.useglaux.com) (live)
+- **Glaux Markets**: in development
 - **Glaux Agro**: in development
 
 ## Stack
@@ -43,10 +44,10 @@ npm run dev        # http://localhost:5173
 
 Everything has a working default; `.env` is optional. See `.env.example`.
 
-| Variable             | Default                        | Purpose                                       |
-| -------------------- | ------------------------------ | --------------------------------------------- |
-| `VITE_MARKETS_URL`   | `https://markets.useglaux.com` | Product origin used by every Markets link     |
-| `VITE_OWL_MODEL_URL` | _(unset)_                      | Load a glTF/GLB instead of the procedural owl |
+| Variable             | Default                       | Purpose                                       |
+| -------------------- | ----------------------------- | --------------------------------------------- |
+| `VITE_LEDGER_URL`    | `https://ledger.useglaux.com` | Product origin used by every Ledger link      |
+| `VITE_OWL_MODEL_URL` | _(unset)_                     | Load a glTF/GLB instead of the procedural owl |
 
 ## Deployment
 
@@ -72,7 +73,7 @@ Worth knowing if you are tempted to move it: Vercel's free Hobby plan does not
 permit this site. Its [fair use
 guidelines](https://vercel.com/docs/limits/fair-use-guidelines) restrict Hobby
 to non-commercial personal use and name "advertising the sale of a product or
-service" as commercial, which is what a company hub pointing at Glaux Markets
+service" as commercial, which is what a company hub pointing at Glaux Ledger
 is. That would be Pro at $20/month. Cloudflare Pages and Netlify both allow
 commercial use on their free tiers.
 
@@ -92,8 +93,8 @@ permissions policy.
 
 ### DNS
 
-The apex `useglaux.com` points at Pages. Leave the `markets` record alone:
-Glaux Markets is a separate deployment and the two only share a domain.
+The apex `useglaux.com` points at Pages. Leave the `ledger` record alone: each
+product is a separate deployment, and they only share a domain with this site.
 
 ## The hero owl
 
@@ -281,8 +282,9 @@ panels, blurred glass, chips, a pulsing live pill) made the company page look
 like a screenshot of its own dashboard. So products are hairline rows rather
 than cards, facets are a mono spec line rather than pills, the nav is opaque
 rather than frosted, and the page carries exactly one filled button: the hero's
-"Open Glaux Markets". Everything else is a rule-and-arrow link, which is what
-keeps that one gold rectangle meaning something.
+"Open Glaux Ledger", the only product currently shipping. Everything else is a
+rule-and-arrow link, which is what keeps that one gold rectangle meaning
+something.
 
 - `src/styles/tokens.css`: the Nyx palette (`--nyx #070b12`, `--gleam
 #e9b45c`, `--verdigris #45b98e`, `--ember #d85f55`), type scale, motion
@@ -297,10 +299,49 @@ Type: Marcellus (display) · Schibsted Grotesk (body) · Spline Sans Mono
 (labels). Exact weights are bundled from `@fontsource`, fingerprinted by Vite,
 and served from the same origin.
 
+### One measure, and what happens past it
+
+`--shell-max` is the page's only measure. The nav, the hero and every section
+share it, so the spine the copy starts on is one unbroken vertical from the
+wordmark to the footer. The hero and the nav used to run to a wider stage,
+which on anything past 1920px left them hugging the screen edge above a column
+floating in the middle of the display.
+
+Above 1700px the fractional columns stop being fractions. A rail set to 42% of
+the width keeps taking 42% of a 34" screen, so the eyebrow ends up holding a
+third of the page and the title is marooned in the middle of it. Each one is
+capped in `rem`, which means the layout holds its proportions against the type
+ramp rather than the viewport. Past 2000px the root size steps up in
+percentages (so a reader's own font size still multiplies it) and `--shell-max`
+opens with it: the page scales rather than stretching.
+
+The catalogue re-columns there too. The spec line leaves the description and
+takes the right edge of the row, so each row is anchored at both ends of its
+hairline instead of trailing off into half a screen of empty width, and the
+section head above adopts the same four columns: eyebrow on the spine, title
+where product names start, lead where their descriptions do.
+
+### In-page navigation
+
+`scroll-behavior: smooth` is still the fallback, but the anchors are animated
+in `src/lib/scrollTo.ts`. The CSS property gives every jump the same duration
+and a near-linear curve, so a nudge to the next section and a jump from the
+footer to the top feel equally mechanical. Distance sets the duration there,
+the page eases on the shared `--ease-out` curve, and a wheel, a drag or a key
+press abandons the animation on the spot. The target takes focus so Tab
+continues from where the page landed, which is what the browser would have done
+had the anchor not been intercepted. The skip link is deliberately excluded: it
+has to land instantly.
+
+The atmosphere behind all of it is a fixed layer rather than a fixed background
+attachment. An attached background is repainted across the whole document on
+every scroll frame, and on a large display that is what made the page feel
+heavy under the hand.
+
 ## SEO
 
 Title, description, canonical, OG and Twitter cards, and an `Organization` +
-`WebSite` JSON-LD graph that names Glaux Markets as a brand, all in
+`WebSite` JSON-LD graph that names the Glaux products as brands, all in
 `index.html`. `public/robots.txt` and `public/sitemap.xml` are static.
 `npm run build` regenerates `public/og-image.png`, `brand-icon-512.png`, and
 `apple-touch-icon.png` before Vite runs. Commit the generated files so previews

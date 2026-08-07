@@ -12,7 +12,8 @@ test("home exposes its primary content and metadata", async ({ page }) => {
 
   await expect(page).toHaveTitle("Glaux | Risk-First Intelligence Systems");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("GLAUX");
-  await expect(page.getByRole("link", { name: "Open Glaux Markets" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open Glaux Ledger" }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Glaux Ledger" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Glaux Markets" })).toBeVisible();
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
@@ -36,7 +37,7 @@ test("skip link moves focus to main content", async ({ page }) => {
 
 test("the linked product row has a matching hit area", async ({ page }) => {
   await page.goto("/");
-  const heading = page.getByRole("heading", { name: "Glaux Markets" });
+  const heading = page.getByRole("heading", { name: "Glaux Ledger" });
   await heading.scrollIntoViewIfNeeded();
   const box = await heading.boundingBox();
   expect(box).not.toBeNull();
@@ -45,7 +46,14 @@ test("the linked product row has a matching hit area", async ({ page }) => {
     ({ x, y }) => document.elementFromPoint(x, y)?.closest("a")?.getAttribute("href"),
     { x: box!.x + box!.width / 2, y: box!.y + box!.height / 2 },
   );
-  expect(targetHref).toBe("https://markets.useglaux.com");
+  expect(targetHref).toBe("https://ledger.useglaux.com");
+});
+
+test("products still in development are stated as such and never linked", async ({ page }) => {
+  await page.goto("/");
+  const markets = page.locator(".product", { hasText: "Glaux Markets" });
+  await expect(markets).toContainText("In development");
+  await expect(markets.locator("a")).toHaveCount(0);
 });
 
 test("reduced motion keeps the static poster and skips WebGL", async ({ page }) => {

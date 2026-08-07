@@ -17,12 +17,7 @@ body {
 }
 
 body {
-  /* The nyx sky: a lifted core, a warm gleam bleeding in from the upper
-     right, over near-black. Fixed so sections drift across it. */
-  background:
-    radial-gradient(1100px 720px at 50% 22%, #0d1626 0%, transparent 68%),
-    radial-gradient(900px 560px at 88% -14%, var(--accent-glow), transparent 60%), var(--nyx);
-  background-attachment: fixed;
+  background: var(--nyx);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: var(--fs-body);
@@ -31,10 +26,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-@media (pointer: coarse) {
-  body {
-    background-attachment: scroll;
-  }
+/* The nyx sky: a lifted core, a warm gleam bleeding in from the upper right,
+   over near-black. It is a fixed layer rather than a fixed background
+   attachment, which the sections used to drift across: an attached
+   background is repainted across the whole document on every scroll frame,
+   and on a large display that is what made the page feel heavy under the
+   hand. A fixed element is composited once and then simply stays put. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 720px at 50% 22%, #0d1626 0%, transparent 68%),
+    radial-gradient(900px 560px at 88% -14%, var(--accent-glow), transparent 60%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -83,6 +89,14 @@ body {
 }
 
 main:focus {
+  outline: none;
+}
+
+/* An anchor target takes focus so Tab continues from wherever the page
+   landed. It is a container rather than a control, so it does not draw a
+   control's ring around a third of the screen. */
+section[tabindex="-1"]:focus,
+section[tabindex="-1"]:focus-visible {
   outline: none;
 }
 

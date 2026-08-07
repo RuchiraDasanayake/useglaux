@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MARKETS_URL, WORDMARK } from "../lib/brand";
-import ArrowUpRight from "./ArrowUpRight";
+import { WORDMARK } from "../lib/brand";
 import OwlMark from "./OwlMark";
 
 const sections = ["what", "products", "principles"] as const;
@@ -18,27 +17,44 @@ export default function Nav() {
   const frame = useRef<number | null>(null);
 
   useEffect(() => {
+    // Measuring the document inside the scroll handler reads layout on every
+    // frame. It only changes when the page does, so it is cached here and
+    // refreshed by the observer below.
+    let scrollable = document.documentElement.scrollHeight - window.innerHeight;
+
     const onScroll = () => {
       if (frame.current !== null) return;
       frame.current = window.requestAnimationFrame(() => {
         frame.current = null;
 
-        const next = window.scrollY > window.innerHeight * 0.72;
+        // Two thresholds, not one: with a single line the bar flickers in
+        // and out for anyone resting exactly on it.
+        const y = window.scrollY;
+        const next = shown.current ? y > window.innerHeight * 0.5 : y > window.innerHeight * 0.72;
         if (next !== shown.current) {
           shown.current = next;
           setVisible(next);
         }
 
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0;
+        const progress = scrollable > 0 ? Math.min(y / scrollable, 1) : 0;
         progressRef.current?.style.setProperty("--scroll-progress", String(progress));
       });
     };
 
+    const remeasure = () => {
+      scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      onScroll();
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", remeasure, { passive: true });
+    const observer = new ResizeObserver(remeasure);
+    observer.observe(document.body);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", remeasure);
+      observer.disconnect();
       if (frame.current !== null) window.cancelAnimationFrame(frame.current);
     };
   }, []);
@@ -93,14 +109,6 @@ export default function Nav() {
             aria-current={activeSection === "principles" ? "location" : undefined}
           >
             Principles
-          </a>
-          <a
-            className="link-arrow link-arrow--sm link-arrow--lead"
-            href={MARKETS_URL}
-            tabIndex={visible ? 0 : -1}
-          >
-            Open Glaux Markets
-            <ArrowUpRight size={13} />
           </a>
         </div>
       </nav>
