@@ -50,11 +50,12 @@ Everything has a working default; `.env` is optional. See `.env.example`.
 
 ## Deployment
 
-A static upload of `dist/`. There is no server code, no API route and no
-serverless function anywhere in this project, so any static host serves it
-identically and none of the platform features you would pay for are used.
+A static upload of `dist/`. There is no server code, no API route, no
+Cloudflare Worker, no Wrangler config, and no Pages Functions — only static
+files. Any static host serves it identically.
 
-It runs on **Cloudflare Pages**. Point it at the repo and set:
+It runs on **Cloudflare Pages** (Git-connected build in the dashboard; not a
+Workers project). Connect the repo and set:
 
 | Setting          | Value           |
 | ---------------- | --------------- |
@@ -64,6 +65,8 @@ It runs on **Cloudflare Pages**. Point it at the repo and set:
 
 Node is pinned by `.node-version` (22.12.0), because Vite 8 needs 20.19 or
 newer and build images default to something older.
+
+`public/_headers` is the only Cloudflare-specific file in the repo.
 
 Worth knowing if you are tempted to move it: Vercel's free Hobby plan does not
 permit this site. Its [fair use
@@ -310,12 +313,3 @@ Glaux product is financial, investment or trading advice. The footer carries
 the full disclaimer and links to first-party `/terms/` and `/privacy/` pages.
 Those documents are a plain-language operational draft and require review by
 qualified counsel before they are treated as final legal advice.
-
-## Continuous integration
-
-GitHub Actions runs `npm ci`, a production dependency audit, all static checks,
-the production build, and Chromium smoke tests on pushes and pull requests.
-Dependabot groups weekly npm and Actions updates. The browser suite verifies
-metadata and generated assets, keyboard skip navigation, the product-row hit
-area, reduced-motion fallback, legal routes, console errors, and automated axe
-accessibility checks.
